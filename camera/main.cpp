@@ -4,7 +4,6 @@
 #include <iostream>
 #include <conio.h>
 #include <stdlib.h>
-#include <Eigen/Dense>
 using namespace cv;
 using namespace std;
 
@@ -13,6 +12,7 @@ int CMYK[4];
 Vec3b targetBGR;
 int targetCMYK[4];
 Point mousePosition = Point(320,240);
+Mat captureImage;
 
 void rgb2cmyk(const Vec3b bgr, int * cmyk) {
 	int B = bgr.val[0];
@@ -33,6 +33,13 @@ static void onMouse(int event, int x, int y, int f, void* userdata){
 	if(event==CV_EVENT_LBUTTONDOWN){
 		mousePosition.x = x;
 		mousePosition.y = y;
+	}
+	else if(event==CV_EVENT_RBUTTONDOWN){
+		mousePosition.x = x;
+		mousePosition.y = y;
+		rgb2cmyk(targetBGR, targetCMYK);
+		targetBGR = captureImage.at<Vec3b>(y, x);
+		rgb2cmyk(targetBGR, targetCMYK);
 	}
 }
 Vec3b colorAverage(Mat image){
@@ -163,14 +170,13 @@ void CaptureFrame(){
 	}
 	else{
 		char kbCmd = ' ', name[30];
-		Mat image;
-		captureDevice >> image;
-		int w = image.cols, h = image.rows;
+		captureDevice >> captureImage;
+		int w = captureImage.cols, h = captureImage.rows;
 		bool finish = false;
 		while(!finish){
 			setMouseCallback(window_name, onMouse, 0);
-			captureDevice >> image;
-			finish = DisplayInfo(image);
+			captureDevice >> captureImage;
+			finish = DisplayInfo(captureImage);
 		
 			if (_kbhit()) kbCmd = _getche();
 			if (kbCmd == 'c') break;
