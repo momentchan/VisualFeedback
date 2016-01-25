@@ -1,4 +1,4 @@
-﻿Build started 2016/1/25 下午 08:55:57.
+﻿Build started 2016/1/26 上午 12:14:17.
      1>Project "C:\Users\Fred\Dropbox\Research\VisualFeedback\camera\opencv_test.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "x64\Debug\opencv_test.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -14,4 +14,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.09
+Time Elapsed 00:00:00.15
