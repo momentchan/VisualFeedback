@@ -1,12 +1,5 @@
-#include "opencv/highgui.h"
-#include "opencv2/opencv.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include <iostream>
-#include <conio.h>
-#include <stdlib.h>
-using namespace cv;
-using namespace std;
-
+#include "main.h"
+#include "FuncDeclaration.h"
 char window_name[30] = "CMYK";
 int CMYK[4];
 Vec3b targetBGR;
@@ -14,6 +7,7 @@ int targetCMYK[4];
 Point mousePosition = Point(320,240);
 Mat captureImage;
 
+Mat targetImg;
 void rgb2cmyk(const Vec3b bgr, int * cmyk) {
 	int B = bgr.val[0];
 	int G = bgr.val[1];
@@ -23,10 +17,25 @@ void rgb2cmyk(const Vec3b bgr, int * cmyk) {
     float b = B / 255.;
     float k = std::min(std::min(1- r, 1- g), 1- b);         
 	
-	cmyk[0] = (1 - r - k) / (1 - k) * 100.;
-	cmyk[1] = (1 - g - k) / (1 - k) * 100.;
-	cmyk[2] = (1 - b - k) / (1 - k) * 100.;
-	cmyk[3] = k * 100.;
+	cmyk[0] = (1 - r - k) / (1 - k) * 255.;
+	cmyk[1] = (1 - g - k) / (1 - k) * 255.;
+	cmyk[2] = (1 - b - k) / (1 - k) * 255.;
+	cmyk[3] = k * 255.;
+}
+void rgb2cmyk(const Vec3b bgr, Vec4b &cmyk) {
+	int B = bgr.val[0];
+	int G = bgr.val[1];
+	int R = bgr.val[2];
+	float r = R / 255.;
+    float g = G / 255.;
+    float b = B / 255.;
+    float k = std::min(std::min(1- r, 1- g), 1- b);         
+	
+	cmyk = Vec4b((1 - r - k) / (1 - k) * 255., (1 - g - k) / (1 - k) * 255., (1 - b - k) / (1 - k) * 255., k * 255.);
+	//cmyk[0] = (1 - r - k) / (1 - k) * 100.;
+	//cmyk[1] = (1 - g - k) / (1 - k) * 100.;
+	//cmyk[2] = (1 - b - k) / (1 - k) * 100.;
+	//cmyk[3] = k * 100.;
 }
 
 static void onMouse(int event, int x, int y, int f, void* userdata){
@@ -62,25 +71,6 @@ Vec3b colorAverage(Mat image){
 }
 bool DisplayInfo(const Mat image){
 	system("cls");
-	/*float target_sum=0, sum=0;
-	for(int i=0; i<3; i++){
-		target_sum+=float(targetCMYK[i]);
-		sum+=float(CMYK[i]);
-	}
-	float target_ratio[3];
-	float ratio[3];
-	for(int i=0;i<3;i++){
-		target_ratio[i] = float(targetCMYK[i])/target_sum;
-		ratio[i] = float(CMYK[i])/sum;
-	}
-	printf ("*****************\n");
-	printf (" Color Detection\n");
-	printf ("*****************\n");
-	printf (" Target: (%.2f,%.2f,%.2f)\n",target_ratio[0],target_ratio[1],target_ratio[2]);
-	printf (" Detect: (%.2f,%.2f,%.2f)\n", ratio[0],ratio[1],ratio[2]);
-	printf (" Differ: (%.2f,%.2f,%.2f)\n", target_ratio[0]-ratio[0],target_ratio[1]-ratio[1],target_ratio[2]-ratio[2]);
-	*/
-
 	char name[30];
 	int w = image.cols, h = image.rows;
 	int patch_size = 100;
@@ -184,19 +174,60 @@ void CaptureFrame(){
 		destroyAllWindows();
 	}
 }
+Mat colorImg;
+
+// RGB to CMYK conversion
+void colorDiffer(Mat target, Mat detect) {
+
+    
+    // rgb to cmyk
+	Mat differMap = target;
+	/*Mat differMap = Mat(target.size(), CV_8UC3);
+	differMap.setTo(255);*/
+	/*imshow("",differMap);
+	waitKey(0);*/
+    for (int y = 0; y < target.rows; y++) {
+        for (int  x = 0; x < target.cols; x++) {
+			int targetCMYK[4];
+			int detectCMYK[4];
+			rgb2cmyk(target.at<Vec3b>(y, x),targetCMYK);
+			rgb2cmyk(detect.at<Vec3b>(y, x),detectCMYK);
+			ArrayXXf differ(1,3);
+			//cout<<targetCMYK[0]<<" "<<targetCMYK[1]<<" "<<targetCMYK[2]<<" "<<endl;
+			//cout<<detectCMYK[0]<<" "<<detectCMYK[1]<<" "<<detectCMYK[2]<<" "<<endl;
+			differ << abs(targetCMYK[0]-detectCMYK[0]), abs(targetCMYK[1]-detectCMYK[1]), abs(targetCMYK[2]-detectCMYK[2]);
+			//cout<<differ.maxCoeff()<<endl;
+			//cout<<Scalar(0,0,differ.maxCoeff())<<endl;
+			if(differ.maxCoeff()>25)
+				circle(differMap, Point(x, y), 0, Scalar(0,0,differ.maxCoeff()));
+			//differMap.at<Vec3b>(i, j)[2] = (uchar)differ.maxCoeff();
+			//Vec4b differ = targetCMYK-detectCMYK;
+
+        }
+    }
+	imshow("",differMap);
+	waitKey(0);
+}
+void test(int &a){
+	cout<<a<<endl;
+}
 int main()
 {
-	// *********************
-	//     Target color
-	// *********************
-	Mat colorPatch = imread("color_patch2.jpg");
-	//imshow("targetRGB",targetRGB);
-	//waitKey(0);
-	targetBGR = colorPatch.at<Vec3b>(0, 0);
-	
-	rgb2cmyk(targetBGR, targetCMYK);
-	CaptureFrame();
-	
+	//// *********************
+	////     Target color
+	//// *********************
+	//Mat colorPatch = imread("color_patch2.jpg");
+	////imshow("targetRGB",targetRGB);
+	////waitKey(0);
+	//targetBGR = colorPatch.at<Vec3b>(0, 0);
+	//
+	//rgb2cmyk(targetBGR, targetCMYK);
+	//CaptureFrame();
 
-	return 0;
+	targetImg = imread("colorImgAlexis.jpg");
+	Mat detectImg = imread("OriginColorSegment2.jpg");
+    colorDiffer(targetImg, detectImg);
+ 
+    return 0;
+	//ColorSeparation();
 }
