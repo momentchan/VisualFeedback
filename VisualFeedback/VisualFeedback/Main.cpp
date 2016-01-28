@@ -3,9 +3,26 @@
 
 int main(int argc, const char** argv)
 {	
+	//// *********************
+	////     Target color
+	//// *********************
+	Mat colorPatch = imread("color_patch2.jpg");
+	//imshow("targetRGB",targetRGB);
+	//waitKey(0);
+
+	//targetBGR = colorPatch.at<Vec3b>(0, 0);
+	//rgb2cmyk(targetBGR, targetCMYK);
+	
+
 	// Read Data
 	Mat targetImg = imread("colorImgAlexis.jpg");
 	Mat detectImg = imread("OriginColorSegment.jpg");
+
+	CaptureFrame(detectImg);
+
+#if SAVE
+	imwrite("Image/Origin.jpg", detectImg);
+#endif
 
 	// Construct Energy Map
 	Mat edgeMap, angles;

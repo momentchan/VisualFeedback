@@ -15,7 +15,7 @@ void rgb2cmyk(const Vec3b bgr, int * cmyk) {
 	cmyk[3] = k * 255.;
 }
 
-void colorDiffer(const Mat target, const Mat detect, vector<Point> & drawPoints, float iteration) {
+void colorDiffer(const Mat target, Mat detect, vector<Point> & drawPoints, float iteration) {
 
 	// rgb to cmyk
 	Mat differMap = target.clone();
@@ -25,16 +25,18 @@ void colorDiffer(const Mat target, const Mat detect, vector<Point> & drawPoints,
 			int detectCMYK[4];
 			rgb2cmyk(target.at<Vec3b>(y, x), targetCMYK);
 			rgb2cmyk(detect.at<Vec3b>(y, x), detectCMYK);
-			ArrayXXf differ(1, 3);
-			differ << abs(targetCMYK[0] - detectCMYK[0]), abs(targetCMYK[1] - detectCMYK[1]), abs(targetCMYK[2] - detectCMYK[2]);
+			ArrayXXf differ(1, 4);
+			differ << abs(targetCMYK[0] - detectCMYK[0]), abs(targetCMYK[1] - detectCMYK[1]), abs(targetCMYK[2] - detectCMYK[2]), abs(targetCMYK[3] - detectCMYK[3]);
 			if (differ.maxCoeff() > DRAWTHRESH / iteration){
 				circle(differMap, Point(x, y), 0, Scalar(0, 0, differ.maxCoeff()));
 				drawPoints.push_back(Point(x, y));
 			}
+			else if (iteration == 1){
+				detect.at<Vec3b>(y, x) = target.at<Vec3b>(y, x);
+			}
 		}
 	}
 	cout << "Number of total draw points: " << drawPoints.size() << endl;
-	imshow("", differMap);
-	waitKey(0);
+	ShowImg("", differMap);
 
 }

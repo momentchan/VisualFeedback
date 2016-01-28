@@ -22,7 +22,7 @@ using namespace cv;
 
 #define DRAWTHRESH 30.0
 #define ITERATION 5
-#define SAMPLEFREQ 50
+#define SAMPLEFREQ 15
 #define PAUSE fgetc(stdin);
 #define EDGECLIPING 1
 #define PI 3.14159

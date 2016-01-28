@@ -87,6 +87,7 @@
     <ClInclude Include="Main.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraControl.cpp" />
     <ClCompile Include="ColorFeedback.cpp" />
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="Main.cpp" />
