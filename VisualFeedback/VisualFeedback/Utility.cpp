@@ -1,4 +1,9 @@
 #include "FuncDeclaration.h"
+bool ColorDifferenceCompare(pair <Point, float> c1, pair <Point, float> c2) {
+	float i = c1.second;
+	float j = c2.second;
+	return (i > j);
+}
 
 bool CompareLength(vector<Point> contour1, vector<Point> contour2) {
 	double i = arcLength(contour1, false);

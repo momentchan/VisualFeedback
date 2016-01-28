@@ -3,10 +3,11 @@
 
 int main(int argc, const char** argv)
 {	
+
 	//// *********************
 	////     Target color
 	//// *********************
-	Mat colorPatch = imread("color_patch2.jpg");
+	//Mat colorPatch = imread("color_patch2.jpg");
 	//imshow("targetRGB",targetRGB);
 	//waitKey(0);
 
@@ -30,7 +31,7 @@ int main(int argc, const char** argv)
 
 	for (int i = 0; i < ITERATION; i++){
 		// Compute color difference
-		vector<Point> drawPoints;
+		vector<pair <Point, float>> drawPoints;
 		colorDiffer(targetImg, detectImg, drawPoints, i+1);
 
 		// Generate Strokes

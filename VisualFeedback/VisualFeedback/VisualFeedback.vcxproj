@@ -85,6 +85,7 @@
     <ClInclude Include="DataStructure.h" />
     <ClInclude Include="FuncDeclaration.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="nms.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraControl.cpp" />

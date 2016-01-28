@@ -12,8 +12,11 @@
 #include <opencv2/highgui/highgui_c.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/imgproc/types_c.h>
+#include <opencv2/core/core.hpp>
+#include <limits>
 #include <time.h> 
 #include <conio.h>
+#include <stdint.h>
 #include <opencv2/opencv.hpp>
 #include <Eigen/Dense>
 using namespace Eigen;

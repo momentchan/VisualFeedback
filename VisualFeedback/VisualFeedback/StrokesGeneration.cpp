@@ -58,16 +58,20 @@ void EMapConstruct(Mat img, Mat & edgeMap, Mat & angles){
 #endif
 }
 
-void StrokesGeneration(const Mat img, Mat & canvas, const vector<Point> drawPoints, const Mat edgeMap, const Mat angles, float iteration){
+void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, float>> drawPoints, const Mat edgeMap, const Mat angles, float iteration){
 
 	int num = 0;
+	
 	// Draw on canvas
 	for (int i = 0; i < drawPoints.size(); i++){
-		int seed = rand() % int(SAMPLEFREQ * iteration);
-		if (seed % int(SAMPLEFREQ * iteration) - 1 == 1){
+		//float p = drawPoints[i].second / 255.0;
+		//float sp = (double)rand() / (RAND_MAX);
+		//int seed = rand() % int(SAMPLEFREQ * iteration);
+		//if (seed % int(SAMPLEFREQ * iteration) - 1 == 1){
+		//if (1){//sp < p){
 			num += 1;
-			int x = drawPoints[i].x;
-			int y = drawPoints[i].y;
+			int x = drawPoints[i].first.x;
+			int y = drawPoints[i].first.y;
 			Scalar color = img.at<Vec3b>(y, x);
 			float angle = angles.at<float>(y, x) + PI / 2;
 			Stroke stroke(color, Point2f(x, y), 10.0/iteration, angle, 10.0);
@@ -76,7 +80,6 @@ void StrokesGeneration(const Mat img, Mat & canvas, const vector<Point> drawPoin
 			imshow("Simulation", canvas);
 			waitKey(10);
 #endif
-		}
 	}
 	cout << "Number of actual draw points: " << num << endl;
 
