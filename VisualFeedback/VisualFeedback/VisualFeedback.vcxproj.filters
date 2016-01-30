@@ -27,6 +27,9 @@
     <ClInclude Include="nms.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MeanShift.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -45,6 +48,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CameraControl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeanShift.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorSeparation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

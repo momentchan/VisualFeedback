@@ -23,7 +23,7 @@ using namespace Eigen;
 using namespace std;
 using namespace cv;
 
-#define DRAWTHRESH 30.0
+#define DRAWTHRESH 50//30.0
 #define ITERATION 5
 #define SAMPLEFREQ 50
 #define PAUSE fgetc(stdin);

@@ -15,14 +15,20 @@ int main(int argc, const char** argv)
 	//rgb2cmyk(targetBGR, targetCMYK);
 	
 
-	// Read Data
-	Mat targetImg = imread("colorImgAlexis.jpg");
-	Mat detectImg = imread("OriginColorSegment.jpg");
+	// Read Data 
+	//Mat targetImg = imread("colorImgAlexis.jpg");
+	Mat targetImg = imread("apple.jpg");
+	
+	Mat detectImg = imread("Color Segment.jpg");
+	//Mat detectImg = imread("Image/Origin.jpg");
+	//CaptureFrame(detectImg);
 
-	CaptureFrame(detectImg);
+	//ColorSeparation(targetImg);
+
+
 
 #if SAVE
-	imwrite("Image/Origin.jpg", detectImg);
+//	imwrite("Image/Origin.jpg", detectImg);
 #endif
 
 	// Construct Energy Map

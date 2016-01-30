@@ -3,16 +3,13 @@
 void FindBlobs(const Mat &, vector < vector<Point2i>> &, Mat &);
 Mat FindLargestRegion(const Mat img);
 
-void ColorSeparation();
-void ColorDefinement();
+
+// Color Separation
+void ColorSeparation(const Mat targetImg);
 bool CompareLength(vector<Point>, vector<Point>);
 
 
-// Utility
-string outputFileName(string file_name, int index, string type);
-float BilinearInterplation(float x, float y);
-void ShowImg(string window_name, Mat img);
-bool ColorDifferenceCompare(pair <Point, float> c1, pair <Point, float> c2);
+
 
 // Color Feedback
 void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & drawPoints, float iteration);
@@ -26,3 +23,9 @@ void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, fl
 
 // Camera Control
 void CaptureFrame(Mat & detectImg);
+
+// Utility
+string outputFileName(string file_name, int index, string type);
+float BilinearInterplation(float x, float y);
+void ShowImg(string window_name, Mat img);
+bool ColorDifferenceCompare(pair <Point, float> c1, pair <Point, float> c2);

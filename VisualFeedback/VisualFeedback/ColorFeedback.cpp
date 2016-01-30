@@ -35,7 +35,7 @@ void nonMaximaSuppression(const Mat& src, const int sz, Mat& dst, const Mat mask
 			Range jc(n, min(n + sz + 1, N));
 			minMaxLoc(src(ic, jc), NULL, &vcmax, NULL, &ijmax, masked ? mask(ic, jc) : noArray());
 			Point cc = ijmax + Point(jc.start, ic.start);
-
+			
 			// search the neighbours centered around the candidate for the true maxima
 			Range in(max(cc.y - sz, 0), min(cc.y + sz + 1, M));
 			Range jn(max(cc.x - sz, 0), min(cc.x + sz + 1, N));
@@ -50,6 +50,7 @@ void nonMaximaSuppression(const Mat& src, const int sz, Mat& dst, const Mat mask
 			minMaxLoc(src(in, jn), NULL, &vnmax, NULL, &ijmax, masked ? mask(in, jn).mul(blockmask) : blockmask);
 			Point cn = ijmax + Point(jn.start, in.start);
 
+			
 			// if the block centre is also the neighbour centre, then it's a local maxima
 			if (vcmax > vnmax) {
 				dst.at<uint8_t>(cc.y, cc.x) = 255;
@@ -83,7 +84,7 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 				//drawPoints.push_back(make_pair(Point(x, y), maxDiffer));
 			}
 			else if (iteration == 1){
-				detect.at<Vec3b>(y, x) = target.at<Vec3b>(y, x);
+				//detect.at<Vec3b>(y, x) = target.at<Vec3b>(y, x);
 			}
 		}
 	}
@@ -91,13 +92,14 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 
 	// Non maximun suppresion
 	Mat mask = (differMap > DRAWTHRESH / iteration);	// only look for local maxima above the value of 1
-	ShowImg("mask", mask);
+	ShowImg("Mask", mask);
 	// find the local maxima with a window of 50
 	Mat maxima;
-	nonMaximaSuppression(differMap, 1, maxima, mask);
+	nonMaximaSuppression(differMap, 3, maxima, mask);
 	// optionally set all non-maxima to zero
 	differMap.setTo(0, maxima == 0);
-	ShowImg("random", differMap);
+	ShowImg("Sample Points", maxima);
+	//ShowImg("Sample Points", differMap);
 
 	for (int y = 0; y < target.rows; y++) {
 		for (int x = 0; x < target.cols; x++) {
