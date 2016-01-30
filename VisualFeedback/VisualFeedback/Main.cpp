@@ -18,13 +18,11 @@ int main(int argc, const char** argv)
 	// Read Data 
 	//Mat targetImg = imread("colorImgAlexis.jpg");
 	Mat targetImg = imread("apple.jpg");
-	
-	Mat detectImg = imread("Color Segment.jpg");
+
+	ColorSeparation(targetImg);
+	Mat detectImg = imread("firstDraw.jpg");
 	//Mat detectImg = imread("Image/Origin.jpg");
 	//CaptureFrame(detectImg);
-
-	//ColorSeparation(targetImg);
-
 
 
 #if SAVE

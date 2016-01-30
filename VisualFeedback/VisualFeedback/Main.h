@@ -24,7 +24,7 @@ using namespace std;
 using namespace cv;
 
 #define DRAWTHRESH 50//30.0
-#define ITERATION 5
+#define ITERATION 3
 #define SAMPLEFREQ 50
 #define PAUSE fgetc(stdin);
 #define EDGECLIPING 1
