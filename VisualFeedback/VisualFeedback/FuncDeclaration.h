@@ -29,3 +29,4 @@ string outputFileName(string file_name, int index, string type);
 float BilinearInterplation(float x, float y);
 void ShowImg(string window_name, Mat img);
 bool ColorDifferenceCompare(pair <Point, float> c1, pair <Point, float> c2);
+void rgb2cmyk(const Vec3b bgr, Vec4f & cmyk);

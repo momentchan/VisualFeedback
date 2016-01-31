@@ -23,7 +23,8 @@ using namespace Eigen;
 using namespace std;
 using namespace cv;
 
-#define DRAWTHRESH 50//30.0
+#define DRAWTHRESH 20// 20 for mean 50 for max 
+#define CLUSTTHRESH 5
 #define ITERATION 3
 #define SAMPLEFREQ 50
 #define PAUSE fgetc(stdin);

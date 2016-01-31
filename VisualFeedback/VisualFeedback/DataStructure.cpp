@@ -1,6 +1,7 @@
 #include "DataStructure.h"
-
-
+// ************************
+//  Stroke Member function
+// ************************
 Stroke::Stroke(Scalar c, Point2f o, float r, float theta, float l){
 	color = c;
 	center = start = end = o;
@@ -10,7 +11,6 @@ Stroke::Stroke(Scalar c, Point2f o, float r, float theta, float l){
 	float ratio = 0.8 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.2 - 0.8)));
 	length = l*ratio;
 };
-
 void Stroke::findEndpoint(const float bound_x, const float bound_y, const Mat edgeMap){
 
 	// Find Start Point
@@ -69,7 +69,6 @@ void Stroke::findEndpoint(const float bound_x, const float bound_y, const Mat ed
 	}
 	end = Point2f(end_x, end_y);
 }
-
 float Stroke::BilinearInterplation(float x, float y, const Mat edgeMap){
 	float ceil_x = ceil(x);
 	float floor_y = floor(y);
@@ -81,4 +80,26 @@ float Stroke::BilinearInterplation(float x, float y, const Mat edgeMap){
 	float leftBottom = edgeMap.at<uchar>(ceil_y, floor_x);
 	float rightBottom = edgeMap.at<uchar>(ceil_y, ceil_x);
 	return ((x - floor_x)*rightTop + (ceil_x - x)*leftTop)*(ceil_y - y) + ((x - floor_x)*rightBottom + (ceil_x - x)*leftBottom)*(y - floor_y);
+}
+
+// *******************************
+//  StrokeCluster Member function
+// *******************************
+void StrokeCluster::addStroke(Stroke drawStroke){
+	drawStrokes.push_back(drawStroke);
+	pointNum += 1;
+
+	Scalar color = drawStroke.getColor();
+	Vec4f CMYK;
+	rgb2cmyk(Vec3b(color[0], color[1], color[2]), CMYK);
+	avgCMYK = (avgCMYK * float(pointNum-1) + Vec4f(float(CMYK[0]), float(CMYK[1]), float(CMYK[2]), float(CMYK[3]))) / float(pointNum);
+	minMaxIdx(avgCMYK, NULL, &maxInfo.second, NULL, &maxInfo.first);
+}
+float StrokeCluster::computeDiffer(Scalar color){
+	Vec4f CMYK;
+	Vec4f differ;
+	rgb2cmyk(Vec3b(color[0], color[1], color[2]), CMYK);
+	absdiff(CMYK, avgCMYK, differ);
+	float differMean = mean(differ)[0];
+	return differMean;
 }

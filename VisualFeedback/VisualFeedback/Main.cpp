@@ -19,7 +19,7 @@ int main(int argc, const char** argv)
 	//Mat targetImg = imread("colorImgAlexis.jpg");
 	Mat targetImg = imread("apple.jpg");
 
-	ColorSeparation(targetImg);
+	//ColorSeparation(targetImg);
 	Mat detectImg = imread("firstDraw.jpg");
 	//Mat detectImg = imread("Image/Origin.jpg");
 	//CaptureFrame(detectImg);

@@ -57,31 +57,83 @@ void EMapConstruct(Mat img, Mat & edgeMap, Mat & angles){
 	imwrite("Image/EdgeMap.jpg", edgeMap);
 #endif
 }
-
+bool ColorSort(StrokeCluster c1, StrokeCluster c2){
+ 	pair <int, double> p1 = c1.getMaxInfo();
+	pair <int, double> p2 = c2.getMaxInfo();
+	if (p1.first < p2.first)
+		return true;
+	if (p1.first > p2.first)
+		return false;
+	if (p1.second > p2.second)
+		return true;
+	if (p1.second < p2.second)
+		return false;
+	return false;
+}
 void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, float>> drawPoints, const Mat edgeMap, const Mat angles, float iteration){
 
-	int num = 0;
+
+	vector<StrokeCluster> StrokeClusters;
 	
-	// Draw on canvas
-	for (int i = 0; i < drawPoints.size(); i++){
-		//float p = drawPoints[i].second / 255.0;
-		//float sp = (double)rand() / (RAND_MAX);
-		//int seed = rand() % int(SAMPLEFREQ * iteration);
-		//if (seed % int(SAMPLEFREQ * iteration) - 1 == 1){
-		//if (1){//sp < p){
-			num += 1;
+	// Initial Stroke Cluster
+	StrokeClusters.push_back(StrokeCluster());
+	int x = drawPoints[0].first.x;
+	int y = drawPoints[0].first.y;
+	Scalar color = img.at<Vec3b>(y, x);
+	float angle = angles.at<float>(y, x) + PI / 2;
+	StrokeClusters[0].addStroke(Stroke(color, Point2f(x, y), 10.0 / iteration, angle, 10.0));
+
+
+	// Color clustering
+	for (int i = 1; i < drawPoints.size(); i++){
+		float minDiffer = INFINITE;
+		Stroke stroke;
+		int bestIndex = 0;
+		for (int c = 0; c < StrokeClusters.size(); c++){
 			int x = drawPoints[i].first.x;
 			int y = drawPoints[i].first.y;
 			Scalar color = img.at<Vec3b>(y, x);
-			float angle = angles.at<float>(y, x) + PI / 2;
-			Stroke stroke(color, Point2f(x, y), 10.0/iteration, angle, 10.0);
-			stroke.drawOnCanvas(canvas, edgeMap);
+			float colorDiffer = StrokeClusters[c].computeDiffer(color);
+			if (colorDiffer < minDiffer){
+				bestIndex = c;
+				minDiffer = colorDiffer;
+				float angle = angles.at<float>(y, x) + PI / 2;
+				stroke = Stroke(color, Point2f(x, y), 10.0 / iteration, angle, 10.0);
+			}
+		}
+		// Add into cluster
+		if (minDiffer < CLUSTTHRESH){
+			StrokeClusters[bestIndex].addStroke(stroke);
+		}
+		// Construct a new cluster
+		else{
+			StrokeClusters.push_back(StrokeCluster());
+			StrokeClusters[StrokeClusters.size() - 1].addStroke(stroke);
+		}
+	}
+	// Color Sorting
+	sort(StrokeClusters.begin(), StrokeClusters.end(), ColorSort);
+	/*for (int c = 0; c < StrokeClusters.size(); c++){
+		StrokeClusters[c].showMaxInfo();
+	}*/
+
+
+	printf("Drawing iteration : %d \n", iteration);
+	// Draw on canvas
+	for (int c = 0; c < StrokeClusters.size(); c++){
+		int strokeNum = StrokeClusters[c].getNum();
+		Vec4f CMYK = StrokeClusters[c].getColor();
+		printf("  # of stroke in cluster %d : %d   (%d, %d, %d, %d) %d \n",
+			c, strokeNum, (int)CMYK[0], (int)CMYK[1], (int)CMYK[2], (int)CMYK[3], StrokeClusters[c].getMaxInfo().first);
+		for (int s = 0; s < strokeNum; s++){
+			StrokeClusters[c].getStroke(s).drawOnCanvas(canvas, edgeMap);
 #if SIMULATION
 			imshow("Simulation", canvas);
 			waitKey(10);
 #endif
-	}
-	cout << "Number of actual draw points: " << num << endl;
+		}
+		//waitKey(0);
+	}	
 
 #if DISPLAY
 	ShowImg("Original", img);
