@@ -2,8 +2,9 @@
 // ************************
 //  Stroke Member function
 // ************************
-Stroke::Stroke(Scalar c, Point2f o, float r, float theta, float l){
-	color = c;
+Stroke::Stroke(Vec3b rgb, Vec4f cmyk, Point2f o, float r, float theta, float l){
+	RGB = rgb;
+	CMYK = cmyk;
 	center = start = end = o;
 	radius = r;
 	dir_x = cos(theta);
@@ -95,11 +96,9 @@ void StrokeCluster::addStroke(Stroke drawStroke){
 	avgCMYK = (avgCMYK * float(pointNum-1) + Vec4f(float(CMYK[0]), float(CMYK[1]), float(CMYK[2]), float(CMYK[3]))) / float(pointNum);
 	minMaxIdx(avgCMYK, NULL, &maxInfo.second, NULL, &maxInfo.first);
 }
-float StrokeCluster::computeDiffer(Scalar color){
-	Vec4f CMYK;
+float StrokeCluster::computeDiffer(Vec4f cmyk){
 	Vec4f differ;
-	rgb2cmyk(Vec3b(color[0], color[1], color[2]), CMYK);
-	absdiff(CMYK, avgCMYK, differ);
+	absdiff(cmyk, avgCMYK, differ);
 	float differMean = mean(differ)[0];
 	return differMean;
 }

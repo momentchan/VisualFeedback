@@ -1,19 +1,12 @@
 #include "main.h"
 
-void FindBlobs(const Mat &, vector < vector<Point2i>> &, Mat &);
-Mat FindLargestRegion(const Mat img);
-
 
 // Color Separation
 void ColorSeparation(const Mat targetImg);
 bool CompareLength(vector<Point>, vector<Point>);
 
-
-
-
 // Color Feedback
 void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & drawPoints, float iteration);
-void rgb2cmyk(const Vec3b bgr, int * cmyk);
 
 // Strokes Generation
 void EMapConstruct(Mat img, Mat & edgeMap, Mat & angles);

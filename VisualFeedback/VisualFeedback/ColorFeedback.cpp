@@ -60,7 +60,6 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 			Vec4f differ;
 			rgb2cmyk(target.at<Vec3b>(y, x), targetCMYK);
 			rgb2cmyk(detect.at<Vec3b>(y, x), detectCMYK);
-			
 			absdiff(targetCMYK, detectCMYK, differ);
 			float differMean = mean(differ)[0];
 

@@ -79,9 +79,11 @@ void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, fl
 	StrokeClusters.push_back(StrokeCluster());
 	int x = drawPoints[0].first.x;
 	int y = drawPoints[0].first.y;
-	Scalar color = img.at<Vec3b>(y, x);
+	Vec3b rgb = img.at<Vec3b>(y, x);
+	Vec4f cmyk;
+	rgb2cmyk(rgb, cmyk);
 	float angle = angles.at<float>(y, x) + PI / 2;
-	StrokeClusters[0].addStroke(Stroke(color, Point2f(x, y), 10.0 / iteration, angle, 10.0));
+	StrokeClusters[0].addStroke(Stroke(rgb, cmyk, Point2f(x, y), 10.0 / iteration, angle, 10.0));
 
 
 	// Color clustering
@@ -92,13 +94,15 @@ void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, fl
 		for (int c = 0; c < StrokeClusters.size(); c++){
 			int x = drawPoints[i].first.x;
 			int y = drawPoints[i].first.y;
-			Scalar color = img.at<Vec3b>(y, x);
-			float colorDiffer = StrokeClusters[c].computeDiffer(color);
+			Vec3b rgb = img.at<Vec3b>(y, x);
+			Vec4f cmyk;
+			rgb2cmyk(rgb, cmyk);
+			float colorDiffer = StrokeClusters[c].computeDiffer(cmyk);
 			if (colorDiffer < minDiffer){
 				bestIndex = c;
 				minDiffer = colorDiffer;
 				float angle = angles.at<float>(y, x) + PI / 2;
-				stroke = Stroke(color, Point2f(x, y), 10.0 / iteration, angle, 10.0);
+				stroke = Stroke(rgb, cmyk, Point2f(x, y), 10.0 / iteration, angle, 10.0);
 			}
 		}
 		// Add into cluster

@@ -8,8 +8,6 @@ int main(int argc, const char** argv)
 	////     Target color
 	//// *********************
 	//Mat colorPatch = imread("color_patch2.jpg");
-	//imshow("targetRGB",targetRGB);
-	//waitKey(0);
 
 	//targetBGR = colorPatch.at<Vec3b>(0, 0);
 	//rgb2cmyk(targetBGR, targetCMYK);
