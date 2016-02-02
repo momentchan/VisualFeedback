@@ -1,4 +1,5 @@
 #include "DataStructure.h"
+
 // ************************
 //  Stroke Member function
 // ************************
@@ -12,6 +13,13 @@ Stroke::Stroke(Vec3b rgb, Vec4f cmyk, Point2f o, float r, float theta, float l){
 	float ratio = 0.8 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.2 - 0.8)));
 	length = l*ratio;
 };
+Stroke::Stroke(Vec3b rgb, Vec4f cmyk, Point2f s, Point2f e, float r){
+	RGB = rgb;
+	CMYK = cmyk;
+	start = s;
+	end = e;
+	radius = r;
+}
 void Stroke::findEndpoint(const float bound_x, const float bound_y, const Mat edgeMap){
 
 	// Find Start Point
@@ -90,10 +98,10 @@ void StrokeCluster::addStroke(Stroke drawStroke){
 	drawStrokes.push_back(drawStroke);
 	pointNum += 1;
 
-	Scalar color = drawStroke.getColor();
+	Vec3b color = drawStroke.getRGB();
 	Vec4f CMYK;
-	rgb2cmyk(Vec3b(color[0], color[1], color[2]), CMYK);
-	avgCMYK = (avgCMYK * float(pointNum-1) + Vec4f(float(CMYK[0]), float(CMYK[1]), float(CMYK[2]), float(CMYK[3]))) / float(pointNum);
+	rgb2cmyk(color, CMYK);
+	avgCMYK = (avgCMYK * float(pointNum - 1) + CMYK) / float(pointNum);
 	minMaxIdx(avgCMYK, NULL, &maxInfo.second, NULL, &maxInfo.first);
 }
 float StrokeCluster::computeDiffer(Vec4f cmyk){

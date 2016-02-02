@@ -28,10 +28,10 @@ using namespace cv;
 #define ITERATION 3
 #define SAMPLEFREQ 50
 #define PAUSE fgetc(stdin);
+#define MEANSHIFT 0
 #define EDGECLIPING 1
 #define PI 3.14159
 #define DISPLAY 0
-#define SAVE 1
 #define SIMULATION 1
 #define CANNY 1
 

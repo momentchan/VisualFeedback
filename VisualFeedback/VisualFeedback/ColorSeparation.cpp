@@ -1,9 +1,12 @@
 #include "FuncDeclaration.h"
 #include "MeanShift.h"
+#include "DataStructure.h"
+#define FIRSTDRAW 0
+extern vector<StrokeCluster> fisrtDrawCluster;
 int fillLines = 0;
 bool turn = false;
 
-void FindDrawPoints(int y, int x, int ys, int xe, Mat fill_region, Mat & fill, ofstream & outputFile, float size, Vec3b fillColor, Point & previousPoint, int lineWidth){
+void FindDrawPoints(int y, int x, int ys, int xe, Mat fill_region, ofstream & outputFile, float size, Vec3b rgb, Vec4f cmyk, int lineWidth, StrokeCluster &cluster){
 	vector<Point> points;
 	bool cross = true;
 
@@ -25,46 +28,41 @@ void FindDrawPoints(int y, int x, int ys, int xe, Mat fill_region, Mat & fill, o
 	if (points.size() % 2 != 0)  // add the boundary point
 		points.push_back(Point(x, y));
 
+	
 	//Draw points
 	int num = points.size() / 2;
 	if (num > 0)
 	if (!turn){
 		for (int i = 0; i < num; i++)
 		{
-			line(fill, points[2 * i], points[2 * i + 1], fillColor, lineWidth);
-			previousPoint = points[2 * i + 1];
+			cluster.addStroke(Stroke(rgb, cmyk, points[2 * i], points[2 * i + 1], lineWidth));
 			outputFile << points[2 * i].x << " " << points[2 * i].y << " " << points[2 * i + 1].x << " " << points[2 * i + 1].y << endl;
 			fillLines++;
-			imshow("Drawing Simulation", fill);
-			waitKey(10);
 		}
 	}
 	else {
 		for (int i = num - 1; i >= 0; i--)
 		if (norm(points[2 * i] - points[2 * i + 1]) > size*0.05)
 		{
-			line(fill, points[2 * i + 1], points[2 * i], fillColor, lineWidth);
-			previousPoint = points[2 * i];
+			cluster.addStroke(Stroke(rgb, cmyk, points[2 * i + 1], points[2 * i], lineWidth));
 			outputFile << points[2 * i + 1].x << " " << points[2 * i + 1].y << " " << points[2 * i].x << " " << points[2 * i].y << endl;
 			fillLines++;
-			imshow("Drawing Simulation", fill);
-			waitKey(10);
 		}
 	}
 	turn = !turn;
 }
-void FillSimulation(vector <Mat> fillRegions, Mat canvas, vector<Scalar> colorValue){
+void FillSimulation(vector <Mat> fillRegions, vector<Scalar> colorValue, vector<StrokeCluster> &fisrtDrawCluster){
 	float size = 0;
 	int gap = 9;
 	int lineWidth = 5;
-
+	
 	//Filling regions
 	for (int i = 0; i < fillRegions.size(); i++) {
 		// Boundary initialization
 		int ys = 1;
-		int ye = canvas.rows - 1;
+		int ye = fillRegions[i].rows - 1;
 		int xs = 1;
-		int xe = canvas.cols - 1;
+		int xe = fillRegions[i].cols - 1;
 		Mat fillRgionBlack;
 		cvtColor(fillRegions[i], fillRgionBlack, CV_RGB2GRAY);
 		fillRgionBlack = fillRgionBlack > 245;
@@ -73,35 +71,22 @@ void FillSimulation(vector <Mat> fillRegions, Mat canvas, vector<Scalar> colorVa
 		outputFile.open(fileName);
 		Point previousPoint;
 		Vec3b fillColor = Vec3b(colorValue[i][0], colorValue[i][1], colorValue[i][2]);
-
+		Vec4f cmyk;
+		rgb2cmyk(fillColor, cmyk);
 		// Write indexing of color
-		outputFile << i << endl;
+		outputFile << (int)fillColor[0] << " " << (int)fillColor[1] << " " << (int)fillColor[2] << endl;
+		outputFile << (float)cmyk[0] << " " << (float)cmyk[1] << " " << (float)cmyk[2] <<" " << (float)cmyk[3] << endl;
 
 		// Find draw points
 		for (int j = ys; j <= ye; j = j + gap)
-			FindDrawPoints(j, xs, ys, xe, fillRgionBlack, canvas, outputFile, size, fillColor, previousPoint, lineWidth);
+			FindDrawPoints(j, xs, ys, xe, fillRgionBlack, outputFile, size, fillColor, cmyk, lineWidth, fisrtDrawCluster[i]);
 		// Last Row
 		for (int k = xs; k <= xe; k = k + gap)
-			FindDrawPoints(ye, k, ys, xe, fillRgionBlack, canvas, outputFile, size, fillColor, previousPoint, lineWidth);
-		outputFile.close();
-
-
-		// Write indexing of color
-		outputFile << i << endl;
-
-		// Find draw points
-		for (int j = ys; j <= ye; j = j + gap)
-			FindDrawPoints(j, xs, ys, xe, fillRgionBlack, canvas, outputFile, size, fillColor, previousPoint, 0);
-		// Last Row
-		for (int k = xs; k <= xe; k = k + gap)
-			FindDrawPoints(ye, k, ys, xe, fillRgionBlack, canvas, outputFile, size, fillColor, previousPoint, 0);
+			FindDrawPoints(ye, k, ys, xe, fillRgionBlack, outputFile, size, fillColor, cmyk, lineWidth, fisrtDrawCluster[i]);
 		outputFile.close();
 	}
 	cout << "\nTotal Number of fill lines: " << fillLines << endl << endl;
-	waitKey(0);
-	imwrite("firstDraw.jpg", canvas);
 }
-
 void ColorSeparation(const Mat targetImg){
 	
 	// Mean shifting
@@ -157,9 +142,8 @@ void ColorSeparation(const Mat targetImg){
 	colorValue.erase(colorValue.begin());
 	fillRegions.erase(fillRegions.begin());
 
-	ShowImg("Color Segment", colorSegment);
+	ShowImg("Color Segment", colorSegment,-1);
 	imwrite("Color Segment.jpg", colorSegment);
-
-	Mat canvas = Mat(colorSegment.size(), CV_8UC3, Scalar(255, 255, 255));
-	FillSimulation(fillRegions, canvas, colorValue);
+	fisrtDrawCluster.resize(fillRegions.size());
+	FillSimulation(fillRegions, colorValue, fisrtDrawCluster);
 }

@@ -49,13 +49,10 @@ void EMapConstruct(Mat img, Mat & edgeMap, Mat & angles){
 	ShowImg("Orientation", angles);
 	ShowImg("EdgeMap", edgeMap);
 #endif
-
-#if SAVE
 	Mat orientation;
 	normalize(angles, orientation, 0x00, 0xFF, cv::NORM_MINMAX, CV_8U);
 	imwrite("Image/Orientation.jpg", orientation);
 	imwrite("Image/EdgeMap.jpg", edgeMap);
-#endif
 }
 bool ColorSort(StrokeCluster c1, StrokeCluster c2){
  	pair <int, double> p1 = c1.getMaxInfo();
@@ -71,8 +68,7 @@ bool ColorSort(StrokeCluster c1, StrokeCluster c2){
 	return false;
 }
 void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, float>> drawPoints, const Mat edgeMap, const Mat angles, float iteration){
-
-
+	
 	vector<StrokeCluster> StrokeClusters;
 	
 	// Initial Stroke Cluster

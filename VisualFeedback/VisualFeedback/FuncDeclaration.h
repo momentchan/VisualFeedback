@@ -1,5 +1,5 @@
+#pragma once
 #include "main.h"
-
 
 // Color Separation
 void ColorSeparation(const Mat targetImg);
@@ -20,6 +20,6 @@ void CaptureFrame(Mat & detectImg);
 // Utility
 string outputFileName(string file_name, int index, string type);
 float BilinearInterplation(float x, float y);
-void ShowImg(string window_name, Mat img);
+void ShowImg(string window_name, Mat img, int time = 0);
 bool ColorDifferenceCompare(pair <Point, float> c1, pair <Point, float> c2);
 void rgb2cmyk(const Vec3b bgr, Vec4f & cmyk);

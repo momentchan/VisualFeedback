@@ -1,31 +1,35 @@
 ﻿#include "FuncDeclaration.h"
 #include "DataStructure.h"
 
+vector<StrokeCluster> fisrtDrawCluster;
+
 int main(int argc, const char** argv)
 {	
-
-	//// *********************
-	////     Target color
-	//// *********************
-	//Mat colorPatch = imread("color_patch2.jpg");
-
-	//targetBGR = colorPatch.at<Vec3b>(0, 0);
-	//rgb2cmyk(targetBGR, targetCMYK);
-	
-
 	// Read Data 
-	//Mat targetImg = imread("colorImgAlexis.jpg");
 	Mat targetImg = imread("apple.jpg");
 
-	//ColorSeparation(targetImg);
+	// *********************
+	//  First Layer Drawing
+	// *********************
+#if MEANSHIFT
+	ColorSeparation(targetImg);
+	Mat detectImg = Mat(targetImg.size(), CV_8UC3, Scalar(255, 255, 255));
+	for (int i = 0; i < fisrtDrawCluster.size(); i++){
+		int strokeNum = fisrtDrawCluster[i].getNum();
+		for (int s = 0; s < strokeNum; s++){
+			fisrtDrawCluster[i].getStroke(s).drawOnCanvas(detectImg);
+			ShowImg("Simulation", detectImg,10);
+		}
+	}
+	waitKey(0);
+	destroyAllWindows();
+	imwrite("firstDraw.jpg", detectImg);
+#else
 	Mat detectImg = imread("firstDraw.jpg");
+#endif
 	//Mat detectImg = imread("Image/Origin.jpg");
 	//CaptureFrame(detectImg);
 
-
-#if SAVE
-//	imwrite("Image/Origin.jpg", detectImg);
-#endif
 
 	// Construct Energy Map
 	Mat edgeMap, angles;
@@ -38,9 +42,7 @@ int main(int argc, const char** argv)
 
 		// Generate Strokes
 		StrokesGeneration(targetImg, detectImg, drawPoints, edgeMap, angles, i+1);
-#if SAVE
 		string fileName = outputFileName("Image/Feedback", i+1, ".jpg");
 		imwrite(fileName, detectImg);
-#endif
 	}
 }

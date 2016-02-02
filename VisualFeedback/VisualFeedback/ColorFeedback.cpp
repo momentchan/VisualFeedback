@@ -73,17 +73,17 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 			}
 		}
 	}
-	ShowImg("differMap", differMap);
+	ShowImg("differMap", differMap,-1);
 
 	// Non maximun suppresion
 	Mat mask = (differMap > DRAWTHRESH / iteration);	// only look for local maxima above the value of 1
-	ShowImg("Mask", mask);
+	ShowImg("Mask", mask, -1);
 	// find the local maxima with a window of 50
 	Mat maxima;
 	nonMaximaSuppression(differMap, 3, maxima, mask);
 	// optionally set all non-maxima to zero
 	differMap.setTo(0, maxima == 0);
-	ShowImg("Sample Points", maxima);
+	ShowImg("Sample Points", maxima, -1);
 	//ShowImg("Sample Points", differMap);
 
 	for (int y = 0; y < target.rows; y++) {
@@ -97,4 +97,5 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 
 	cout << "Number of total draw points: " << drawPoints.size() << endl;
 	ShowImg("", differImage);
+	destroyAllWindows();
 }

@@ -4,13 +4,18 @@ class Stroke{
 public:
 	Stroke(){}
 	Stroke(Vec3b rgb, Vec4f cmyk, Point2f o, float r, float theta, float l);
+	Stroke(Vec3b rgb, Vec4f cmyk, Point2f s, Point2f e, float r);
 	void findEndpoint(const float, const float, const Mat edgeMap);
 	float BilinearInterplation(float x, float y, const Mat edgeMap);
 	void drawOnCanvas(Mat & canvas, const Mat edgeMap){
 		findEndpoint(float(canvas.cols), float(canvas.rows), edgeMap);
 		line(canvas, start, end, RGB, radius);
 	}
-	Scalar getColor(){ return RGB; }
+	void drawOnCanvas(Mat & canvas){
+		line(canvas, start, end, RGB, radius);
+	}
+	Vec3b getRGB(){ return RGB; }
+	Vec4f getCMYK(){ return CMYK; }
 private:
 	Vec3b RGB;
 	Vec4f CMYK;

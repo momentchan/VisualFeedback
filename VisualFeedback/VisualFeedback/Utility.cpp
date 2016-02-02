@@ -25,9 +25,12 @@ void rgb2cmyk(const Vec3b bgr, Vec4f & cmyk) {
 	cmyk[2] = (1 - b - k) / (1 - k) * 255.;
 	cmyk[3] = k * 255.;
 }
-void ShowImg(string window_name, Mat img){
+void ShowImg(string window_name, Mat img, int time){
 	imshow(window_name, img);
-	waitKey(0);
+	if (time != 0 && time != -1)
+		waitKey(time);
+	else if (time == 0)
+		waitKey(0);
 }
 bool ColorDifferenceCompare(pair <Point, float> c1, pair <Point, float> c2) {
 	float i = c1.second;
