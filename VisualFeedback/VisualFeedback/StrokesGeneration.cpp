@@ -1,5 +1,4 @@
 #include "FuncDeclaration.h"
-#include "DataStructure.h"
 
 void SobelDetection(Mat src, Mat & grad, Mat & angles){
 	int scale = 1, delta = 0;

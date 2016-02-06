@@ -1,4 +1,4 @@
-#include "DataStructure.h"
+#include "FuncDeclaration.h"
 
 // ************************
 //  Stroke Member function

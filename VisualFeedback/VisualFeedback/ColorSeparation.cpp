@@ -1,8 +1,7 @@
 #include "FuncDeclaration.h"
 #include "MeanShift.h"
-#include "DataStructure.h"
 #define FIRSTDRAW 0
-extern vector<StrokeCluster> fisrtDrawCluster;
+//extern vector<StrokeCluster> fisrtDrawCluster;
 int fillLines = 0;
 bool turn = false;
 
@@ -87,7 +86,7 @@ void FillSimulation(vector <Mat> fillRegions, vector<Scalar> colorValue, vector<
 	}
 	cout << "\nTotal Number of fill lines: " << fillLines << endl << endl;
 }
-void ColorSeparation(const Mat targetImg){
+void ColorSeparation(const Mat targetImg, vector<StrokeCluster> &fisrtDrawCluster){
 	
 	// Mean shifting
 	Mat colorSegment = Mat(targetImg.size(), CV_8UC3, Scalar(255, 255, 255));

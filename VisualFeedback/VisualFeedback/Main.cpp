@@ -1,7 +1,4 @@
 ﻿#include "FuncDeclaration.h"
-#include "DataStructure.h"
-
-vector<StrokeCluster> fisrtDrawCluster;
 
 int main(int argc, const char** argv)
 {	
@@ -12,7 +9,8 @@ int main(int argc, const char** argv)
 	//  First Layer Drawing
 	// *********************
 #if MEANSHIFT
-	ColorSeparation(targetImg);
+	vector<StrokeCluster> fisrtDrawCluster;
+	ColorSeparation(targetImg, fisrtDrawCluster);
 	Mat detectImg = Mat(targetImg.size(), CV_8UC3, Scalar(255, 255, 255));
 	for (int i = 0; i < fisrtDrawCluster.size(); i++){
 		int strokeNum = fisrtDrawCluster[i].getNum();

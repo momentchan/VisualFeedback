@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DataStructure.h" />
     <ClInclude Include="FuncDeclaration.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="MeanShift.h" />

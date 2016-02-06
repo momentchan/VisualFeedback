@@ -21,9 +21,6 @@
     <ClInclude Include="FuncDeclaration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DataStructure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="nms.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

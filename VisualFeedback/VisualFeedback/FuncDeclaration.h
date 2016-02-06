@@ -2,7 +2,7 @@
 #include "main.h"
 
 // Color Separation
-void ColorSeparation(const Mat targetImg);
+void ColorSeparation(const Mat targetImg, vector<StrokeCluster> &fisrtDrawCluster);
 bool CompareLength(vector<Point>, vector<Point>);
 
 // Color Feedback
@@ -15,7 +15,7 @@ void CannyDetection(Mat src, Mat &canny);
 void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, float>> drawPoints, const Mat edgeMap, const Mat angles, float iteration);
 
 // Camera Control
-void CaptureFrame(Mat & detectImg);
+void CaptureFrame(VideoCapture captureDevice, Mat detectImg);
 
 // Utility
 string outputFileName(string file_name, int index, string type);
