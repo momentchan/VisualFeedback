@@ -45,8 +45,8 @@ void EMapConstruct(Mat img, Mat & edgeMap, Mat & angles){
 #endif
 
 #if DISPLAY
-	ShowImg("Orientation", angles);
-	ShowImg("EdgeMap", edgeMap);
+	ShowImg("Orientation", angles, 0);
+	ShowImg("EdgeMap", edgeMap, 0);
 #endif
 	Mat orientation;
 	normalize(angles, orientation, 0x00, 0xFF, cv::NORM_MINMAX, CV_8U);

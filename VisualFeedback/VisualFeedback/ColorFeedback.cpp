@@ -46,7 +46,7 @@ void nonMaximaSuppression(const Mat& src, const int sz, Mat& dst, const Mat mask
 
 
 void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & drawPoints, float iteration) {
-	//vector<pair <Point, float>> drawPoints;
+	iteration++;
 
 	// rgb to cmyk
 	Mat differImage = target.clone();
