@@ -52,8 +52,8 @@ void FindDrawPoints(int y, int x, int ys, int xe, Mat fill_region, ofstream & ou
 }
 void FillSimulation(vector <Mat> fillRegions, vector<Scalar> colorValue, vector<StrokeCluster> &fisrtDrawCluster){
 	float size = 0;
-	int gap = 9;
-	int lineWidth = 5;
+	int gap = 15;
+	int lineWidth = 10;
 	
 	//Filling regions
 	for (int i = 0; i < fillRegions.size(); i++) {

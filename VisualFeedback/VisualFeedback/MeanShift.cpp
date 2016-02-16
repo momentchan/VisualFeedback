@@ -50,7 +50,7 @@ int MeanShift(const IplImage* img, int **labels)
 
 	int level = 1;
 	double color_radius2=color_radius*color_radius;
-	int minRegion = 1000;
+	int minRegion = 1500;
 
 	// use Lab rather than L*u*v!
 	// since Luv may produce noise points
