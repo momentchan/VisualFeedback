@@ -3,7 +3,7 @@
 int main(int argc, const char** argv)
 {	
 	// Read Data 
-	Mat targetImg = imread("apple.jpg");
+	Mat targetImg = imread("orange.jpg");
 
 	// *********************
 	//  First Layer Drawing
