@@ -78,11 +78,14 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 	// Non maximun suppresion
 	Mat mask = (differMap > DRAWTHRESH / iteration);	// only look for local maxima above the value of 1
 	ShowImg("Mask", mask, -1);
+
 #if DISPLAY
 	ShowImg("differMap", differMap);
+	imwrite("differMap.jpg", differMap);
 #endif 
 #if DISPLAY
 	ShowImg("Mask", mask);
+	imwrite("Mask.jpg", mask);
 #endif 
 	// find the local maxima with a window of 50
 	Mat maxima;
@@ -92,6 +95,7 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 	ShowImg("Sample Points", maxima, -1);
 #if DISPLAY
 	ShowImg("Sample Points", maxima);
+	imwrite("Sample Points.jpg", maxima);
 #endif
 	//ShowImg("Sample Points", differMap);
 
