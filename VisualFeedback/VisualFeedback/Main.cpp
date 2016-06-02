@@ -3,7 +3,7 @@
 int main(int argc, const char** argv)
 {	
 	// Read Data 
-	Mat targetImg = imread("apple.jpg");
+	Mat targetImg = imread("pindar.jpg");
 
 	// *********************
 	//  First Layer Drawing
@@ -18,6 +18,8 @@ int main(int argc, const char** argv)
 			fisrtDrawCluster[i].getStroke(s).drawOnCanvas(detectImg);
 			ShowImg("Simulation", detectImg,10);
 		}
+		cout << i << endl;
+		waitKey(0);
 	}
 	waitKey(0);
 	destroyAllWindows();

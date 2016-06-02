@@ -66,8 +66,8 @@ inline int getLabel2( std::vector<int>& unionfind, int l )
 	}
 }
 
-const int spatial_radius = 30;
-const double color_radius = 10;//rgb:30
+const int spatial_radius = 15;
+const double color_radius = 12;//rgb:30
 int MeanShift(const IplImage* img, int **labels);
 
 // RAList from EDISON

@@ -23,12 +23,12 @@ using namespace Eigen;
 using namespace std;
 using namespace cv;
 
-#define DRAWTHRESH 20// 20 for mean 50 for max 
+#define DRAWTHRESH 50// 20 for mean 50 for max 
 #define CLUSTTHRESH 5
-#define ITERATION 3
+#define ITERATION 10
 #define SAMPLEFREQ 50
 #define PAUSE fgetc(stdin);
-#define MEANSHIFT 0
+#define MEANSHIFT 1
 #define EDGECLIPING 1
 #define PI 3.14159
 #define DISPLAY 1

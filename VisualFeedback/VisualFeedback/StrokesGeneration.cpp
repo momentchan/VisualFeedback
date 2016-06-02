@@ -78,8 +78,10 @@ void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, fl
 	Vec4f cmyk;
 	rgb2cmyk(rgb, cmyk);
 	float angle = angles.at<float>(y, x) + PI / 2;
-	StrokeClusters[0].addStroke(Stroke(rgb, cmyk, Point2f(x, y), 10.0 / iteration, angle, 10.0));
-
+	if (10.0 / iteration>5)
+		StrokeClusters[0].addStroke(Stroke(rgb, cmyk, Point2f(x, y), 10.0 / iteration, angle, 20));
+	else
+		StrokeClusters[0].addStroke(Stroke(rgb, cmyk, Point2f(x, y), 5, angle, 20));
 
 	// Color clustering
 	for (int i = 1; i < drawPoints.size(); i++){
@@ -97,7 +99,10 @@ void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, fl
 				bestIndex = c;
 				minDiffer = colorDiffer;
 				float angle = angles.at<float>(y, x) + PI / 2;
-				stroke = Stroke(rgb, cmyk, Point2f(x, y), 10.0 / iteration, angle, 10.0);
+				if (10.0 / iteration>5)
+					stroke = Stroke(rgb, cmyk, Point2f(x, y), 10.0 / iteration, angle, 20);
+				else
+					stroke = Stroke(rgb, cmyk, Point2f(x, y), 5, angle, 20);
 			}
 		}
 		// Add into cluster
@@ -117,13 +122,13 @@ void StrokesGeneration(const Mat img, Mat & canvas, const vector<pair <Point, fl
 	}*/
 
 
-	printf("Drawing iteration : %d \n", iteration);
+	printf("Drawing iteration : %d \n", (int)iteration);
 	// Draw on canvas
 	for (int c = 0; c < StrokeClusters.size(); c++){
 		int strokeNum = StrokeClusters[c].getNum();
 		Vec4f CMYK = StrokeClusters[c].getColor();
-		printf("  # of stroke in cluster %d : %d   (%d, %d, %d, %d) %d \n",
-			c, strokeNum, (int)CMYK[0], (int)CMYK[1], (int)CMYK[2], (int)CMYK[3], StrokeClusters[c].getMaxInfo().first);
+		//printf("  # of stroke in cluster %d : %d   (%d, %d, %d, %d) %d \n",
+		//	c, strokeNum, (int)CMYK[0], (int)CMYK[1], (int)CMYK[2], (int)CMYK[3], StrokeClusters[c].getMaxInfo().first);
 		for (int s = 0; s < strokeNum; s++){
 			StrokeClusters[c].getStroke(s).drawOnCanvas(canvas, edgeMap);
 #if SIMULATION

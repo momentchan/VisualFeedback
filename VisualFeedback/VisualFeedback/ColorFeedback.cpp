@@ -61,10 +61,11 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 			rgb2cmyk(target.at<Vec3b>(y, x), targetCMYK);
 			rgb2cmyk(detect.at<Vec3b>(y, x), detectCMYK);
 			absdiff(targetCMYK, detectCMYK, differ);
-			float differMean = mean(differ)[0];
+		    //float differMean = mean(differ)[0];
+			float differMean = max(max(max(differ[0], differ[1]),differ[2]),differ[3]);
 
 			differMap.at<uchar>(y, x) = (uchar)differMean;
-			if (differMean > DRAWTHRESH / iteration){
+			if (differMean > DRAWTHRESH){
 				circle(differImage, Point(x, y), 0, Scalar(0, 0, differMean));
 				//drawPoints.push_back(make_pair(Point(x, y), maxDiffer));
 			}
@@ -73,16 +74,19 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 			}
 		}
 	}
-	ShowImg("differMap", differMap,-1);
+	ShowImg("differMap", differMap, -1);
 
 	// Non maximun suppresion
-	Mat mask = (differMap > DRAWTHRESH / iteration);	// only look for local maxima above the value of 1
+	Mat mask = (differMap > DRAWTHRESH);	// only look for local maxima above the value of 1
 	ShowImg("Mask", mask, -1);
-
+	Mat temp = Mat(Size(400, 400), CV_8UC1);
+	//temp = cv::Scalar::all(255) - differMap;
 #if DISPLAY
-	ShowImg("differMap", differMap);
-	imwrite("differMap.jpg", differMap);
+	ShowImg("differMap", temp);
+	ShowImg("differMap", differMap * 10);
+	imwrite("differMap.jpg", differMap * 10);
 #endif 
+
 #if DISPLAY
 	ShowImg("Mask", mask);
 	imwrite("Mask.jpg", mask);
@@ -93,9 +97,16 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 	// optionally set all non-maxima to zero
 	differMap.setTo(0, maxima == 0);
 	ShowImg("Sample Points", maxima, -1);
+	temp.setTo(0);
+	for (int j = 0; j < maxima.rows; j++)
+	for (int i = 0; i < maxima.cols; i++)
+	if (int(maxima.at<uchar>(j,i)) != 0){
+		circle(temp, Point(i, j), 2, Scalar(255, 255, 255),-1);
+	}
 #if DISPLAY
 	ShowImg("Sample Points", maxima);
-	imwrite("Sample Points.jpg", maxima);
+	ShowImg("Sample Points", temp);
+	imwrite("Sample Points.jpg", temp);
 #endif
 	//ShowImg("Sample Points", differMap);
 
@@ -109,8 +120,8 @@ void colorDiffer(const Mat target, Mat detect, vector<pair <Point, float>> & dra
 	sort(drawPoints.begin(), drawPoints.end(), ColorDifferenceCompare);
 
 	cout << "Number of total draw points: " << drawPoints.size() << endl;
-#if DISPLAY
-	ShowImg("", differImage);
+//#if DISPLAY
+//	ShowImg("", differImage);
+//#endif
 	destroyAllWindows();
-#endif
 }
